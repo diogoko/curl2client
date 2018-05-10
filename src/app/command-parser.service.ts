@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { CurlCommand } from './curl-command';
-import stringArgv = require('string-argv');
-import parseArgs = require('minimist');
+import stringArgv from 'string-argv';
+import parseArgs from 'minimist';
 
 @Injectable()
 export class CommandParserService {
