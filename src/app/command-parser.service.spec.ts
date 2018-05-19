@@ -1,6 +1,7 @@
 import { TestBed, inject } from '@angular/core/testing';
 
 import { CommandParserService } from './command-parser.service';
+import { Header } from './header';
 
 describe('CommandParserService', () => {
   let service: CommandParserService;
@@ -29,7 +30,7 @@ describe('CommandParserService', () => {
     var c = service.parse('-H "X-Test: 123" http://www.google.com/');
     expect(c.method).toBe('GET');
     expect(c.url).toBe('http://www.google.com/');
-    expect(c.headers).toEqual(['X-Test: 123']);
+    expect(c.headers).toEqual([new Header('X-Test', '123')]);
     expect(c.data).toBeUndefined();
   });
 
@@ -56,12 +57,13 @@ describe('CommandParserService', () => {
 
   it('handles --header', () => {
     var c = service.parse('--header "X-Test: 123"');
-    expect(c.headers).toEqual(['X-Test: 123']);
+    expect(c.headers).toEqual([new Header('X-Test', '123')]);
   });
 
   it('multiple headers', () => {
     var c = service.parse('--header "X-Test: 123" -H "Content-type: application/json"');
-    expect(c.headers.sort()).toEqual(['Content-type: application/json', 'X-Test: 123']);
+    c.headers.sort((h1, h2) => h1.name.localeCompare(h2.name));
+    expect(c.headers).toEqual([new Header('Content-type', 'application/json'), new Header('X-Test', '123')]);
   });
 
   it('handles --data', () => {

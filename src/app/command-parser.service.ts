@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { CurlCommand } from './curl-command';
 import * as stringArgv from 'string-argv';
 import * as parseArgs from 'minimist';
+import { Header } from './header';
 
 @Injectable()
 export class CommandParserService {
@@ -24,7 +25,8 @@ export class CommandParserService {
 
     command.url = args._[0];
 
-    command.headers = this.forceArray([args.H, args.header]);
+    command.headers = this.forceArray([args.H, args.header])
+      .map(Header.parse);
 
     // TODO: -F, --form name=content (join all -F with &)
 

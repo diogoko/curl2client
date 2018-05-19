@@ -18,8 +18,7 @@ export class AngularJSTarget extends Target {
     fields.push(`method: '${args.method}'`);
 
     if (args.headers.length > 0) {
-      var headersFields =
-        args.headers.map(h => h.replace(/([^: ]+)\s*:\s*(.+)/, "'$1': '$2'"));
+      var headersFields = args.headers.map(h => `'${h.name}': '${h.value}'`);
       var headersText = this.indent(headersFields.join(',\n'), indentationSize);
 
       fields.push(`headers: {
