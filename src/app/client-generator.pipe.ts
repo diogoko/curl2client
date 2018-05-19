@@ -15,7 +15,7 @@ export class ClientGeneratorPipe implements PipeTransform {
     }
 
     var args = this.commandParserService.parse(command);
-    return target.generatorFunc(args);
+    return target.generate(args);
   }
 
 }
