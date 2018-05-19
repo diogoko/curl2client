@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { CurlCommand } from './curl-command';
-import stringArgv from 'string-argv';
-import parseArgs from 'minimist';
+import * as stringArgv from 'string-argv';
+import * as parseArgs from 'minimist';
 
 @Injectable()
 export class CommandParserService {
@@ -9,39 +9,45 @@ export class CommandParserService {
   constructor() { }
 
   parse(text: string): CurlCommand {
-    var argv = stringArgv(text);
+    var argv: string[] = stringArgv(text);
 
-    // TODO: discard 'curl'
+    if (argv[0] == 'curl') {
+      argv.shift();
+    }
 
     var args = parseArgs(argv);
 
     var command = new CurlCommand();
 
-    // TODO: --request
-    command.method = args.X || 'GET';
-    // TODO: consider just -X that is a string
+    var methods = this.forceArray([args.X, args.request]);
+    command.method = methods[0] || 'GET';
 
     command.url = args._[0];
-    // TODO: consider just url that is a string
 
-    // TODO: --header
-    if (args.H) {
-      // TODO: only consider args.H that is a string when not array
-      command.headers = Array.isArray(args.H) ? args.H : [args.H];
-    } else {
-      command.headers = [];
-    }
+    command.headers = this.forceArray([args.H, args.header]);
 
     // TODO: -F, --form name=content (join all -F with &)
 
-    // TODO: --data
-    // TODO: @filename
-    if (args.d) {
-      // TODO: only consider first -d
-      command.data = args.d;
-    }
+    var data = this.forceArray([args.d, args.data]);
+    command.data = data[0];
 
     return command;
   }
 
+  private forceArray(value: any): string[] {
+    if (!this.isValidArrayItem(value)) {
+      return [];
+    }
+
+    if (!Array.isArray(value)) {
+      return [String(value)];
+    }
+
+    return value.reduce((a1, a2) => a1.concat(a2), [])
+      .filter(this.isValidArrayItem);
+  }
+
+  private isValidArrayItem(value: any): boolean {
+    return !(value == null || typeof value == 'boolean');
+  }
 }

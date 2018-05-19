@@ -8,8 +8,4 @@ describe('ClientGeneratorService', () => {
       providers: [ClientGeneratorService]
     });
   });
-
-  it('should be created', inject([ClientGeneratorService], (service: ClientGeneratorService) => {
-    expect(service).toBeTruthy();
-  }));
 });
