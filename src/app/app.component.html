@@ -1,12 +1,22 @@
-<div>
+<div class="container">
   <h1>
     curl2client
   </h1>
-  <div>
-    <input [(ngModel)]="command"/>
-    <pre>{{ command | clientGenerator:selectedTarget }}</pre>
-    <select [(ngModel)]="selectedTarget">
-      <option *ngFor="let t of targets" [ngValue]="t">{{ t.label }}</option>
-    </select>
-  </div>
+  <form>
+    <div class="form-group">
+      <label for="command">curl command</label>
+      <input [(ngModel)]="command" id="command" name="command" class="form-control"/>
+    </div>
+    <div class="form-group">
+      <label for="selectedTarget">Target</label>
+      <select [(ngModel)]="selectedTarget" id="selectedTarget" name="selectedTarget" class="form-control">
+        <option *ngFor="let t of targets" [ngValue]="t">{{ t.label }}</option>
+      </select>
+    </div>
+    <div class="card bg-light">
+      <div class="card-body">
+        <pre>{{ command | clientGenerator:selectedTarget }}</pre>
+      </div>
+    </div>
+  </form>
 </div>
